@@ -1,0 +1,61 @@
+version: '2'
+services:
+
+  data-volume:
+    container_name: docker-data
+    image: busybox
+    volumes:
+      - "${SRC_DIR}:/var/www/html"
+      - ./volume/db:/var/lib/mysql
+      - ./volume/log/nginx:/var/log/nginx
+      - ./volume/log/php-fpm:/var/log/php-fpm
+      - ./volume/log/mysql:/var/log/mysqld.log
+
+  web:
+    container_name: docker-nginx
+    build: ./nginx
+    ports:
+      - 80:80
+    links:
+      - app
+    volumes_from:
+      - data-volume
+
+  app:
+    container_name: docker-php7fpm
+    build: ./php-fpm
+    ports:
+      - 9000:9000
+    links:
+      - cache
+      - db
+    volumes_from:
+      - data-volume
+
+  cache:
+    container_name: docker-memcached
+    image: memcached:1.5-alpine
+    ports:
+      - 11211:11211
+    volumes_from:
+      - data-volume
+
+  db:
+    container_name: docker-mysql57
+    build: ./mysql
+    command: mysqld --sql_mode=""
+    ports:
+      - 3306:3306
+    volumes_from:
+      - data-volume
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+
+  system-monitor:
+    container_name: docker-monitor
+    image: titpetric/netdata
+    volumes:
+      - /sys:/host/sys:ro
+      - /proc:/host/proc:ro
+    ports:
+      - "19999:19999"
