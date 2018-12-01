@@ -1,9 +1,9 @@
 # docker-lemp-stack
 
 ## Stack
-- [alpine] nginx v1.15.2
-- [alpine] php-fpm(php7)
-- [alpine] memcached v1.5.9
+- [alpine] nginx v1.15
+- [alpine] php-fpm(php7.2)
+- [alpine] memcached v1.5
 - [debian] mysql v5.7
 
 ## Get started
