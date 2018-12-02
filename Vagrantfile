@@ -30,6 +30,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) { |config|
     sudo yum install -y yum-utils
     sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
     sudo yum makecache fast
+    sudo yum install -y git
     sudo yum install -y docker-ce
     sudo systemctl enable docker-ce
     sudo systemctl start docker-ce

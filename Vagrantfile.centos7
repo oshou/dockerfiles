@@ -25,10 +25,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) { |config|
       node.vm.synced_folder vm_param[:shared_source], vm_param[:shared_target], mount_options: ['dmode=777','fmode=777'],owner: 0,group: 0
     }
   }
+
   config.vm.provision "shell", inline: <<-SHELL
     sudo yum install -y yum-utils
     sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
     sudo yum makecache fast
+    sudo yum install -y git
     sudo yum install -y docker-ce
     sudo systemctl enable docker-ce
     sudo systemctl start docker-ce
