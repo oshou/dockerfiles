@@ -6,10 +6,10 @@ services:
     image: busybox
     volumes:
       - "${SRC_DIR}:/var/www/html"
-      - ./volume/db:/var/lib/mysql
+        # - ./volume/db:/var/lib/mysql
       - ./volume/log/nginx:/var/log/nginx
       - ./volume/log/php-fpm:/var/log/php-fpm
-      - ./volume/log/mysql:/var/log/mysqld.log
+      - ./volume/log/mysql:/var/log/mysql
 
   web:
     container_name: docker-nginx
@@ -42,7 +42,7 @@ services:
 
   db:
     container_name: docker-mysql57
-    build: ./mysql
+    image: mysql:5.7
     command: mysqld --sql_mode=""
     ports:
       - 3306:3306
@@ -50,12 +50,3 @@ services:
       - data-volume
     environment:
       MYSQL_ROOT_PASSWORD: password
-
-  system-monitor:
-    container_name: docker-monitor
-    image: titpetric/netdata
-    volumes:
-      - /sys:/host/sys:ro
-      - /proc:/host/proc:ro
-    ports:
-      - "19999:19999"
