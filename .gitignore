@@ -1,0 +1,6 @@
+.vagrant
+docker-lemp-stack/volume/log/*
+docker-lemp-stack/volume/db/*
+!.gitkeep
+
+
