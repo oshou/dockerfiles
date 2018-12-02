@@ -13,7 +13,6 @@ VM_PARAMS = [
   },
 ]
 
-# Configure
 Vagrant.configure(VAGRANTFILE_API_VERSION) { |config|
 
   config.vm.box = VM_BOX
@@ -26,14 +25,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) { |config|
     }
   }
 
+  # Docker & Git Setup
   config.vm.provision "shell", inline: <<-SHELL
     sudo yum install -y yum-utils
     sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
     sudo yum makecache fast
     sudo yum install -y git
     sudo yum install -y docker-ce
-    sudo systemctl enable docker-ce
-    sudo systemctl start docker-ce
+    sudo systemctl enable docker
+    sudo systemctl start docker
     sudo curl -L https://github.com/docker/compose/releases/download/1.17.1/docker-compose-`uname -s`-`uname -m` > docker-compose
     sudo mv docker-compose /usr/local/bin/docker-compose
     sudo chmod +x /usr/local/bin/docker-compose

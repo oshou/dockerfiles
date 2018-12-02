@@ -25,4 +25,33 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) { |config|
       node.vm.synced_folder vm_param[:shared_source], vm_param[:shared_target], mount_options: ['dmode=777','fmode=777'],owner: 0,group: 0
     }
   }
+
+  # for keep vbguest-GuestOS compatibility
+  if Vagrant.has_plugin?("vagrant-vbguest") then
+    config.vbguest.auto_update = false
+  end
+
+  # Docker & Git Setup
+  config.vm.provision "shell", inline: <<-SHELL
+    sudo apt-get -y install \
+        apt-transport-https \
+        ca-certificates \
+        curl \
+        software-properties-common
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    sudo add-apt-repository \
+        "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+        $(lsb_release -cs) \
+        stable"
+    sudo apt-get -y update
+    sudo apt-get -y install docker-ce
+    sudo systemctl enable docker
+    sudo systemctl start docker
+    sudo curl -L https://github.com/docker/compose/releases/download/1.17.1/docker-compose-`uname -s`-`uname -m` > docker-compose
+    sudo mv docker-compose /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose
+    sudo gpasswd -a vagrant docker
+    sudo systemctl restart docker
+    sudo apt-get -y install git
+  SHELL
 }
