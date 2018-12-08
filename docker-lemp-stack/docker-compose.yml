@@ -6,10 +6,11 @@ services:
     image: busybox
     volumes:
       - "${SRC_DIR}:/var/www/html"
-        # - ./volume/db:/var/lib/mysql
+      - ./volume/db:/var/lib/mysql
       - ./volume/log/nginx:/var/log/nginx
       - ./volume/log/php-fpm:/var/log/php-fpm
       - ./volume/log/mysql:/var/log/mysql
+      - ./volume/log/app:/var/www/html/htdocs/logs
 
   web:
     container_name: docker-nginx
