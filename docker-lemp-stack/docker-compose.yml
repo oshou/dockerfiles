@@ -10,7 +10,8 @@ services:
       - ./volume/log/nginx:/var/log/nginx
       - ./volume/log/php-fpm:/var/log/php-fpm
       - ./volume/log/mysql:/var/log/mysql
-      - ./volume/log/app:/var/www/html/htdocs/logs
+        # - ./volume/log/app:/var/www/html/htdocs/logs
+      - ./volume/log/app:/var/www/html/logs
 
   web:
     container_name: docker-nginx
@@ -28,23 +29,14 @@ services:
     ports:
       - 9000:9000
     links:
-      - cache
       - db
-    volumes_from:
-      - data-volume
-
-  cache:
-    container_name: docker-memcached
-    image: memcached:1.5-alpine
-    ports:
-      - 11211:11211
     volumes_from:
       - data-volume
 
   db:
     container_name: docker-mysql57
     image: mysql:5.7
-    command: --innodb-use-native-aio=0
+    command: mysqld --sql_mode="" --innodb-use-native-aio=0
     ports:
       - 3306:3306
     volumes_from:
