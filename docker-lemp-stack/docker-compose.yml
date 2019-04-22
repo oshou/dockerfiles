@@ -4,18 +4,31 @@ services:
   data-volume:
     container_name: docker-data
     image: busybox
+    env_file: .env
     volumes:
+      # @common
+      - /etc/localtime:/etc/localtime:ro
+      # @nginx
+      - ./conf/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./conf/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./log/nginx:/var/log/nginx
       - "${SRC_DIR}:/var/www/html"
-      - ./volume/db:/var/lib/mysql
-      - ./volume/log/nginx:/var/log/nginx
-      - ./volume/log/php-fpm:/var/log/php-fpm
-      - ./volume/log/mysql:/var/log/mysql
-        # - ./volume/log/app:/var/www/html/htdocs/logs
-      - ./volume/log/app:/var/www/html/logs
+      # @php-fpm
+      - ./conf/php-fpm/www.conf:/usr/local/etc/php-fpm.d/www.conf
+      - ./conf/php-fpm/php.ini:/usr/local/etc/php/php.ini
+      - ./log/php-fpm/logs:/var/log/php-fpm
+      - ./log/php-fpm/logs:/var/www/html/logs
+      # @memcached
+      - ./conf/memcached/memcached:/etc/sysconfig/memcached
+      # @mysql
+      - ./conf/mysql:/etc/mysql
+      - ./data/mysql:/var/lib/mysql
+      - ./log/mysql/:/var/log/mysqld.log
 
   web:
     container_name: docker-nginx
-    build: ./nginx
+    image: nginx:1.15-alpine
+    working_dir: /var/www
     ports:
       - 80:80
     links:
@@ -25,21 +38,42 @@ services:
 
   app:
     container_name: docker-php7fpm
-    build: ./php-fpm
+    build: ./conf/php-fpm
+    working_dir: /var/www
     ports:
       - 9000:9000
     links:
+      - cache
       - db
+    volumes_from:
+      - data-volume
+
+  cache:
+    container_name: docker-memcached
+    image: memcached:1.5-alpine
+    ports:
+      - 11211:11211
     volumes_from:
       - data-volume
 
   db:
     container_name: docker-mysql57
     image: mysql:5.7
-    command: mysqld --sql_mode="" --innodb-use-native-aio=0
+    working_dir: /var/lib/mysql
+    command: mysqld --sql_mode=""
     ports:
       - 3306:3306
     volumes_from:
       - data-volume
     environment:
       MYSQL_ROOT_PASSWORD: password
+
+  system-monitor:
+    container_name: docker-monitor
+    image: titpetric/netdata
+    volumes:
+      - /sys:/host/sys:ro
+      - /proc:/host/proc:ro
+    ports:
+      - "19999:19999"
+    restart: always

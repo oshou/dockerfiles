@@ -1,5 +1,4 @@
-volume/log/*
-volume/db/*
+log/*
+data/*
 !.gitkeep
-*.crt
-*.key
+.env
