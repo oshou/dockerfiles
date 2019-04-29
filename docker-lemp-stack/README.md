@@ -1,9 +1,8 @@
 # docker-lemp-stack
 
 ## Stack
-- [alpine] nginx v1.15.2
-- [alpine] php-fpm(php7)
-- [alpine] memcached v1.5.9
+- [alpine] nginx v1.15
+- [alpine] php-fpm(php7.2)
 - [debian] mysql v5.7
 
 ## Get started
@@ -11,7 +10,6 @@
 ```
 $ git clone https://github.com/oshou/docker-lemp-stack.git
 $ cd docker-lemp-stack
-$ cp -rp .env.example .env
-$ vim .env & specify src directory
+$ export SRC_DIR=/path/to/your_application_directory
 $ docker-compose up -d
 ```

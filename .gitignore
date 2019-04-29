@@ -1,7 +1,5 @@
 .vagrant
 docker-lemp-stack/volume/log/*
 docker-lemp-stack/volume/db/*
-Vagrantfile
 !.gitkeep
 volume/
-logs/
