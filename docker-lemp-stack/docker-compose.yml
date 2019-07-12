@@ -7,6 +7,7 @@ services:
     volumes:
       - "${SRC_DIR}:/var/www/html"
       - ./volume/db:/var/lib/mysql
+      - ./volume/redis:/data
       - ./volume/log/nginx:/var/log/nginx
       - ./volume/log/php-fpm:/var/log/php-fpm
       - ./volume/log/mysql:/var/log/mysql
@@ -30,6 +31,15 @@ services:
       - 9000:9000
     links:
       - db
+    volumes_from:
+      - data-volume
+
+  kvs:
+    container_name: docker-redis
+    image: redis
+    ports:
+      - 6379:6379
+    command: redis-server --appendonly yes
     volumes_from:
       - data-volume
 
