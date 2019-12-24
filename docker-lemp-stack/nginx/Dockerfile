@@ -4,6 +4,8 @@ WORKDIR /var/www/html
 
 COPY ./conf/nginx.conf   /etc/nginx/nginx.conf
 COPY ./conf/default.conf /etc/nginx/conf.d/default.conf
+COPY ./conf/ssl.conf /etc/nginx/conf.d/ssl.conf
+COPY ./conf/certs   /etc/nginx/certs
 
 RUN set -x \
     && apk --no-cache add tzdata \

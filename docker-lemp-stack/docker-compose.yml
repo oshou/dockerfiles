@@ -1,6 +1,5 @@
-version: '2'
+version: "2"
 services:
-
   data-volume:
     container_name: docker-data
     image: busybox
@@ -11,7 +10,7 @@ services:
       - ./volume/log/nginx:/var/log/nginx
       - ./volume/log/php-fpm:/var/log/php-fpm
       - ./volume/log/mysql:/var/log/mysql
-        # - ./volume/log/app:/var/www/html/htdocs/logs
+      - ./volume/log/app:/var/www/html/htdocs/logs
       - ./volume/log/app:/var/www/html/logs
 
   web:
@@ -19,6 +18,8 @@ services:
     build: ./nginx
     ports:
       - 80:80
+      # HTTPS通信時のみアンコメントアウト
+      #- 443:443
     links:
       - app
     volumes_from:
