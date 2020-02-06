@@ -1,0 +1,25 @@
+version: "2"
+services:
+  # Mount Volumes
+  data-volume:
+    container_name: docker-data
+    image: busybox
+    volumes:
+      # DB data
+      - ./volume/db:/var/lib/mysql
+      # MySQL Logs
+      - ./volume/log/mysql:/var/log/mysql
+
+  # DB Container
+  db:
+    container_name: docker-mysql57
+    image: mysql:5.7
+    ports:
+      - 3306:3306
+    volumes_from:
+      - data-volume
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      TZ: "Asia/Tokyo"
+    working_dir: /var/lib/mysql
+    command: mysqld --sql_mode="" --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci

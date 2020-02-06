@@ -1,0 +1,28 @@
+version: "2"
+services:
+  # # Mount Volumes
+  # data-volume:
+  #   container_name: docker-data
+  #   image: busybox
+  #   volumes:
+  #     # DB data
+  #     #- ./volume/db:/var/lib/mysql
+  #     # MySQL Logs
+  #     #- ./volume/log/mysql:/var/log/mysql
+
+  # DB Container
+  db:
+    container_name: docker-postgres12
+    image: postgres:12-alpine
+    ports:
+      - 5432:5432
+    # volumes_from:
+    #   - data-volume
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
+    user: root
+    restart: always
+    #working_dir: /var/lib/mysql
+    #command: mysqld --sql_mode="" --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
