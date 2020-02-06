@@ -2,7 +2,7 @@ version: "2"
 services:
   # Mount Volumes
   data-volume:
-    container_name: docker-data
+    container_name: docker-data-mysql
     image: busybox
     volumes:
       # DB data
