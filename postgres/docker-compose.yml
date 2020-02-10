@@ -2,7 +2,7 @@ version: "2"
 services:
   # Mount Volumes
   data-volume:
-    container_name: docker-data-pg
+    container_name: data-pg
     image: busybox
     volumes:
       # DB data
@@ -10,12 +10,10 @@ services:
 
   # DB Container
   db:
-    container_name: docker-postgres12
+    container_name: postgres
     image: postgres:12-alpine
     ports:
       - 5432:5432
-    volumes_from:
-      - data-volume
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: password
@@ -23,3 +21,5 @@ services:
     user: root
     restart: always
     working_dir: /var/lib/postgresql/data
+    volumes_from:
+      - data-volume

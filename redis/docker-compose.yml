@@ -1,0 +1,18 @@
+version: "2"
+services:
+  # Mount Volumes
+  data-volume:
+    container_name: data-redis
+    image: busybox
+    volumes:
+      - ./volume/db:/data
+
+  # Redis Container
+  redis:
+    container_name: redis
+    image: redis:6.0-rc-alpine
+    ports:
+      - 6379:6379
+    command: redis-server --appendonly yes --requirepass foobared
+    volumes_from:
+      - data-volume

@@ -1,0 +1,26 @@
+version: "2"
+services:
+  # Mount Volumes
+  data-volume:
+    container_name: data-rabbitmq
+    image: busybox
+    volumes:
+      #- ./enabled_plugins:/etc/rabbitmq/enabled_plugins
+      #- "./rabbitmq.config:/etc/rabbitmq/rabbitmq.config:ro"
+      #- "./autocluster-0.4.1.ez:/usr/lib/rabbitmq/lib/rabbitmq_server-3.5.5/plugins/autocluster-0.4.1.ez"
+
+  # DB Container
+  db:
+    container_name: rabbitmq
+    hostname: "rabbit"
+    image: "rabbitmq:3.8-rc-alpine"
+    ports:
+      - 15672:15672
+      - 5672:5672
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+      RABBITMQ_DEFAULT_USER: rabbitmq
+      RABBITMQ_DEFAULT_PASS: rabbitmq
+      RABBITMQ_DEFAULT_VHOST: "/"
+    volumes_from:
+      - data-volume
