@@ -13,6 +13,6 @@ services:
     image: redis:6.0-rc-alpine
     ports:
       - 6379:6379
-    command: redis-server --appendonly yes --requirepass foobared
+    command: redis-server --appendonly yes
     volumes_from:
       - data-volume
