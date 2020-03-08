@@ -1,0 +1,31 @@
+version: "2"
+services:
+  # Mount Volumes
+  data-volume:
+    container_name: data-mongo
+    image: busybox
+    volumes:
+      # DB data
+      - ./volume/db:/data/db
+      - ./volume/configdb:/data/configdb
+
+  # DB Container
+  db:
+    image: mongo
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    restart: always
+    volumes_from:
+      - data-volume
+
+  admin:
+    image: mongo-express
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: password
+    restart: always
