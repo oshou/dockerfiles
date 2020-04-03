@@ -1,0 +1,56 @@
+version: "2"
+services:
+  # Mount Volumes
+  data-volume:
+    container_name: docker-data
+    image: busybox
+    volumes:
+      # Application Source
+      - "${SRC_DIR}:/var/www/html"
+      # DB data
+      - ./volume/db:/var/lib/mysql
+      # Nginx Logs
+      - ./volume/log/nginx:/var/log/nginx
+      # Php-fpm Logs
+      - ./volume/log/php-fpm:/var/log/php-fpm
+      # MySQL Logs
+      - ./volume/log/mysql:/var/log/mysql
+      # Application Logs
+      - ./volume/log/app:/var/www/html/htdocs/logs
+
+  # Web Container
+  web:
+    container_name: docker-nginx
+    build: ./nginx
+    ports:
+      - 80:80
+    links:
+      - app
+    volumes_from:
+      - data-volume
+
+  # PHP Application Container
+  app:
+    container_name: docker-php7fpm
+    build: ./php-fpm
+    ports:
+      - 9000:9000
+    links:
+      - db
+    volumes_from:
+      - data-volume
+
+  # DB Container
+  # 不要であれば以下コメントアウト
+  db:
+    container_name: docker-mysql57
+    image: mysql:5.7
+    ports:
+      - 3306:3306
+    volumes_from:
+      - data-volume
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      TZ: "Asia/Tokyo"
+    working_dir: /var/lib/mysql
+    command: mysqld --sql_mode="" --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
