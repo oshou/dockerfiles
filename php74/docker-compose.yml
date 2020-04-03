@@ -1,0 +1,22 @@
+version: "2"
+services:
+  # Mount Volumes
+  data-volume:
+    container_name: docker-data
+    image: busybox
+    volumes:
+      # Application Source
+      - "${SRC_DIR}:/var/www/html"
+      # Php-fpm Logs
+      - ./volume/log/php-fpm:/var/log/php-fpm
+      # Application Logs
+      - ./volume/log/app:/var/www/html/htdocs/logs
+
+  # PHP Application Container
+  app:
+    container_name: docker-php7fpm
+    build: ./php-fpm
+    ports:
+      - 9001:9001
+    volumes_from:
+      - data-volume

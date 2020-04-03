@@ -15,4 +15,4 @@ RUN set -x \
     && docker-php-ext-configure mysqli --with-mysqli=mysqlnd \
     && rm -rf /var/cache/apk/*
 
-EXPOSE 9000
+EXPOSE 9001
