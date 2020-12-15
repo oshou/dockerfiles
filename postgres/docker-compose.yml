@@ -11,7 +11,7 @@ services:
   # DB Container
   db:
     container_name: postgres
-    image: postgres:12-alpine
+    build: .
     ports:
       - 5432:5432
     environment:
@@ -23,3 +23,15 @@ services:
     working_dir: /var/lib/postgresql/data
     volumes_from:
       - data-volume
+
+  # Admin Container
+  admin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    ports:
+      - 80:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: root
+      PGADMIN_DEFAULT_PASSWORD: root
+    user: root
+    restart: always
