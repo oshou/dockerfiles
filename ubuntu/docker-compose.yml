@@ -1,0 +1,5 @@
+version: '2'
+services:
+  ubuntu:
+    container_name: ubuntu
+    image: ubuntu:18.04
